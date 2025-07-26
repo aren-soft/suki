@@ -1,0 +1,23 @@
+---
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Gallery from '../components/Gallery.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Sukiyaki - Restaurante Japonés San Telmo (1970-2023)</title>
+		<meta name="description" content="Sitio conmemorativo del legendario restaurante japonés Sukiyaki de San Telmo, Buenos Aires. Donde Ito-san recibió a personalidades como Luis Alberto Spinetta, Bobby Fischer y muchos más durante 53 años (1970-2023)." />
+	</head>
+	<body class="font-sans">
+		<Hero />
+		<About />
+		<Gallery />
+		<Footer />
+	</body>
+</html>

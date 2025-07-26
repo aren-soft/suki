@@ -1,0 +1,207 @@
+---
+
+---
+
+<style>
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .overflow-x-auto {
+    scroll-behavior: smooth;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .modal.show {
+    display: flex;
+    opacity: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    z-index: 1001;
+    transition: opacity 0.3s ease;
+  }
+
+  .close-btn:hover {
+    opacity: 0.7;
+  }
+
+  .gallery-image {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-image:hover {
+    transform: scale(1.02);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('carousel');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('closeModal');
+    const scrollAmount = 336; // 320px (image width) + 24px (gap)
+
+    // Carousel functionality
+    prevBtn.addEventListener('click', () => {
+      carousel.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    });
+
+    // Update button visibility based on scroll position
+    function updateButtons() {
+      const isAtStart = carousel.scrollLeft <= 0;
+      const isAtEnd = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth;
+      
+      prevBtn.style.opacity = isAtStart ? '0.5' : '1';
+      nextBtn.style.opacity = isAtEnd ? '0.5' : '1';
+      prevBtn.style.pointerEvents = isAtStart ? 'none' : 'auto';
+      nextBtn.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+    }
+
+    carousel.addEventListener('scroll', updateButtons);
+    updateButtons(); // Initial state
+
+    // Modal functionality
+    const galleryImages = document.querySelectorAll('.gallery-image');
+    
+    galleryImages.forEach(img => {
+      img.addEventListener('click', () => {
+        modal.classList.add('show');
+        modalImg.src = img.src;
+        modalImg.alt = img.alt;
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      });
+    });
+
+    // Close modal functions
+    function closeModal() {
+      modal.classList.remove('show');
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    
+    // Close modal when clicking outside the image
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) {
+        closeModal();
+      }
+    });
+  });
+</script>
+
+<section class="gallery py-16 bg-slate-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-12 text-slate-700">Galería de Recuerdos</h2>
+    <div class="relative">
+      <button id="prevBtn" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-slate-700/80 hover:bg-slate-700 text-white p-3 rounded-full shadow-lg transition-all duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <button id="nextBtn" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-slate-700/80 hover:bg-slate-700 text-white p-3 rounded-full shadow-lg transition-all duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+      <div id="carousel" class="overflow-x-auto scrollbar-hide">
+        <div class="flex gap-6 pb-4" style="width: max-content;">
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/suki.png" alt="Foto del Restaurante" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/plate.jpg" alt="Platos Especiales" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/el_flaco.jpg" alt="Luis y su familia" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/flaco.jpg" alt="Luis con " class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/sakes.png" alt="Eventos Especiales" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/indoor.jpg" alt="Clientes Memorables" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/inside.jpg" alt="Momentos Históricos" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/sashimi.png" alt="Sashimi Tradicional" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/cocina.png" alt="La Cocina de Ito-san" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="w-80 h-80 rounded-lg overflow-hidden shadow-slate-300/50 shadow-md hover:shadow-slate-400/60 transition-shadow duration-300 flex-shrink-0">
+          <img src="/images/gallery/gyoza.jpg" alt="Gyoza Caseras" class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+      </div>
+    </div>
+    </div>
+    <p class="text-center text-slate-600 mt-8 italic">
+      "Cada imagen cuenta una historia, cada momento fue especial en nuestro querido restaurante."
+    </p>
+  </div>
+</section>
+
+<!-- Modal para ver imágenes completas -->
+<div id="imageModal" class="modal">
+  <span id="closeModal" class="close-btn">&times;</span>
+  <img id="modalImage" class="modal-content" alt="">
+</div>
